@@ -32,22 +32,26 @@ public class FileExample {
   [some-files/more-files/b.txt, some-files/more-files/c.java] as results
 
   Given new File("some-files/a.txt") as a parameter, we'd expect
-  [some-files/a.txt] and a result
+  [some-files/a.txt] as a result
 
-  See the File documentation here: https://docs.oracle.com/javase/8/docs/api/java/io/File.html
+  See the File documentation here:
+  https://docs.oracle.com/javase/8/docs/api/java/io/File.html
 
   */
 
 	static List<File> getFiles(File start) throws IOException {
 	  File f = start;
 	  List<File> result = new ArrayList<>();
-	  result.add(start);
-	  if(f.isDirectory()) {
+	  if (f.isDirectory()) {
 	    File[] paths = f.listFiles();
-	    for(File subFile: paths) {
-	      result.add(subFile);
-	    }
-	  }
+	    if (paths != null) {
+        for (File subFile : paths) {
+          result.addAll(getFiles(subFile));
+        }
+      }
+	  } else {
+      result.add(start);
+    }
 	  return result;
 	}
 }
